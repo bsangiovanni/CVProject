@@ -1,6 +1,7 @@
 package contour_detector;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 import java_utilities.pgmutilities.PGM;
@@ -56,7 +57,7 @@ public class TemplateMatching {
 		int[] pixels = imgIn.getPixels();
 
 		int dim = width * height;
-		int[] pixel_x = new int[dim];
+		float[] pixel_x = new float[dim];
 
 		for (int i = (3 - 1) / 2; i < height - (3 - 1) / 2; i++) {
 			for (int j = (3 - 1) / 2; j < width - (3 - 1) / 2; j++) {
@@ -75,14 +76,36 @@ public class TemplateMatching {
 				convRes.add(utility.convolution(mask6, points));
 				convRes.add(utility.convolution(mask7, points));
 				convRes.add(utility.convolution(mask8, points));
-				pixel_x[i * width + j] = (int) (1.5*(Collections.max(convRes)/points[1][1]-0.3));
+				double tmp = (double) points[1][1];
+				double tmpMax = (double) Collections.max(convRes);
+				pixel_x[i * width + j] = (float) (1.5 * (Math.abs(tmp / tmpMax
+						- 0.3)));
 				convRes.clear();
 			}
 
 		}
+		int[] phaseIn = new int[imgOut.getHeight() * imgOut.getWidth()];
+		float[] copy = Arrays.copyOf(pixel_x,
+				imgOut.getHeight() * imgOut.getWidth());
+		Arrays.sort(copy);
+		float min = copy[0];
+		float max = copy[imgOut.getHeight() * imgOut.getWidth() - 1];
+		for (int i = 0; i < pixel_x.length; i++) {
+			if (pixel_x[i] < min) {
+				pixel_x[i] = 0;
+			}
+			if (pixel_x[i] > max) {
+				pixel_x[i] = 255;
+			}
+			if (pixel_x[i] >= min && pixel_x[i] <= max) {
+				pixel_x[i] = 255 * (pixel_x[i] - min) / (max - min);
+
+			}
+			phaseIn[i] = (int) pixel_x[i];
+		}
 		for (int i = 0; i < dim; i++) {
 
-			pixels[i] = pixel_x[i];
+			pixels[i] = phaseIn[i];
 
 		}
 

@@ -17,9 +17,11 @@ public class TemplateTest {
 		TemplateMatching template = new TemplateMatching();
 
 		template.makeFilter(pgm, imgOut);
-		// pgmu.normalizeModule(imgOut.getPixels(), imgOut);
+
 		
-		pgmu.normalizeModule(imgOut.getPixels(), imgOut);
+//		pgmu.normalizeModule(imgOut.getPixels(), imgOut);
+//		int[] histogram = pgmu.histogramPGM(imgOut);
+//		pgmu.EqualizerModule(histogram, imgOut, imgOut.getPixels());
 		pgmu.writePGM(imgOut, "EstateT.pgm");
 	}
 
