@@ -14,25 +14,7 @@ public class TemplateMatching {
 	private ArrayList<int[][]> multMask = new ArrayList<int[][]>();
 
 	public void makeFilter(PGM imgIn, PGM imgOut) {
-		// int[] vect = new int[9];
-		// for (int i = 0; i < vect.length-2; i++) {
-		// vect[i]=1;
-		// vect[i+1]=1;
-		// vect[i+2]=1;
-		// for (int j = 0; j < onemask.length; j++) {
-		// for (int k = 0; k < onemask.length; k++) {
-		// onemask[j][k]=vect[k+j*3];
-		// }
-		// }
-		// for (int j = 0; j < onemask.length; j++) {
-		// System.out.println(onemask[j][0]+" " + onemask[j][1]+ " " +
-		// onemask[j][2]);
-		// }
-		// multMask.add(onemask);
-		// for (int j = 0; j < vect.length; j++) {
-		// vect[j]=0;
-		// }
-		// }
+
 		int[][] mask1 = { { 1, 1, 1 }, { 0, 0, 0 }, { 0, 0, 0 } };
 		multMask.add(mask1);
 		int[][] mask2 = { { 0, 1, 1 }, { 0, 0, 1 }, { 0, 0, 0 } };
@@ -49,6 +31,7 @@ public class TemplateMatching {
 		multMask.add(mask7);
 		int[][] mask8 = { { 1, 1, 0 }, { 1, 0, 0 }, { 0, 0, 0 } };
 		multMask.add(mask8);
+		int[][] ones = { { 1, 1, 1 }, { 1, 1, 1 }, { 1, 1, 1 } };
 
 		int[][] points = new int[3][3];
 
@@ -57,7 +40,7 @@ public class TemplateMatching {
 		int[] pixels = imgIn.getPixels();
 
 		int dim = width * height;
-		float[] pixel_x = new float[dim];
+		double[] pixel_x = new double[dim];
 
 		for (int i = (3 - 1) / 2; i < height - (3 - 1) / 2; i++) {
 			for (int j = (3 - 1) / 2; j < width - (3 - 1) / 2; j++) {
@@ -76,20 +59,27 @@ public class TemplateMatching {
 				convRes.add(utility.convolution(mask6, points));
 				convRes.add(utility.convolution(mask7, points));
 				convRes.add(utility.convolution(mask8, points));
-				double tmp = (double) points[1][1];
+				double tmp = (double) utility.convolution(ones, points);
 				double tmpMax = (double) Collections.max(convRes);
-				pixel_x[i * width + j] = (float) (1.5 * (Math.abs(tmp / tmpMax
-						- 0.3)));
+				double current = 0;
+				if (tmpMax >= 90) {
+					current = 1.5 * ((tmpMax / tmp) - (1 / 3));
+					if (current >= 0.88) {
+						pixel_x[i * width + j] = current;
+					}
+				
+				}else {
+					pixel_x[i * width + j] = 0;
+				}
 				convRes.clear();
 			}
-
 		}
 		int[] phaseIn = new int[imgOut.getHeight() * imgOut.getWidth()];
-		float[] copy = Arrays.copyOf(pixel_x,
+		double[] copy = Arrays.copyOf(pixel_x,
 				imgOut.getHeight() * imgOut.getWidth());
 		Arrays.sort(copy);
-		float min = copy[0];
-		float max = copy[imgOut.getHeight() * imgOut.getWidth() - 1];
+		float min = (float) copy[0];
+		float max = (float) copy[imgOut.getHeight() * imgOut.getWidth() - 1];
 		for (int i = 0; i < pixel_x.length; i++) {
 			if (pixel_x[i] < min) {
 				pixel_x[i] = 0;
@@ -103,6 +93,7 @@ public class TemplateMatching {
 			}
 			phaseIn[i] = (int) pixel_x[i];
 		}
+
 		for (int i = 0; i < dim; i++) {
 
 			pixels[i] = phaseIn[i];
