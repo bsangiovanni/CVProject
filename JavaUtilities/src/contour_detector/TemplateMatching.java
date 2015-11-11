@@ -76,9 +76,9 @@ public class TemplateMatching {
 			}
 			if (pixel_x[i] >= min && pixel_x[i] <= max) {
 				pixel_x[i] = 255 * (pixel_x[i] - min) / (max - min);
-
+				phaseIn[i] = (int) pixel_x[i];
 			}
-			phaseIn[i] = (int) pixel_x[i];
+			
 		}
 
 		for (int i = 0; i < dim; i++) {
