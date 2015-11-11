@@ -382,8 +382,9 @@ public class PgmUtilities {
 			}
 			if(phase[i]>=min && phase[i]<=max){
 				phase[i]=255*(phase[i]-min)/(max-min);
+				phaseIn[i]=(int)phase[i];
 			}
-			phaseIn[i]=(int)phase[i];
+			
 		}
 		imgOut.setPixels(phaseIn);
 		return imgOut;
