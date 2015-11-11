@@ -11,26 +11,17 @@ public class TemplateMatching {
 
 	private PgmUtilities utility = new PgmUtilities();
 	private ArrayList<Integer> convRes = new ArrayList<Integer>();
-	private ArrayList<int[][]> multMask = new ArrayList<int[][]>();
 
 	public void makeFilter(PGM imgIn, PGM imgOut) {
 
 		int[][] mask1 = { { 1, 1, 1 }, { 0, 0, 0 }, { 0, 0, 0 } };
-		multMask.add(mask1);
 		int[][] mask2 = { { 0, 1, 1 }, { 0, 0, 1 }, { 0, 0, 0 } };
-		multMask.add(mask2);
 		int[][] mask3 = { { 0, 0, 1 }, { 0, 0, 1 }, { 0, 0, 1 } };
-		multMask.add(mask3);
 		int[][] mask4 = { { 0, 0, 0 }, { 0, 0, 1 }, { 0, 1, 1 } };
-		multMask.add(mask4);
 		int[][] mask5 = { { 0, 0, 0 }, { 0, 0, 0 }, { 1, 1, 1 } };
-		multMask.add(mask5);
 		int[][] mask6 = { { 0, 0, 0 }, { 1, 0, 0 }, { 1, 1, 0 } };
-		multMask.add(mask6);
 		int[][] mask7 = { { 1, 0, 0 }, { 1, 0, 0 }, { 1, 0, 0 } };
-		multMask.add(mask7);
 		int[][] mask8 = { { 1, 1, 0 }, { 1, 0, 0 }, { 0, 0, 0 } };
-		multMask.add(mask8);
 		int[][] ones = { { 1, 1, 1 }, { 1, 1, 1 }, { 1, 1, 1 } };
 
 		int[][] points = new int[3][3];
@@ -59,17 +50,13 @@ public class TemplateMatching {
 				convRes.add(utility.convolution(mask6, points));
 				convRes.add(utility.convolution(mask7, points));
 				convRes.add(utility.convolution(mask8, points));
-				double tmp = (double) utility.convolution(ones, points);
-				double tmpMax = (double) Collections.max(convRes);
-				double current = 0;
-				if (tmpMax >= 90) {
-					current = 1.5 * ((tmpMax / tmp) - (1 / 3));
-					if (current >= 0.88) {
-						pixel_x[i * width + j] = current;
-					}
-				
-				}else {
-					pixel_x[i * width + j] = 0;
+				int tmp = utility.convolution(ones, points);
+				int tmpMax = Collections.max(convRes);
+				double tau = 0.88;
+				double th= (1-tau)/(2*tau+1);
+				pixel_x[i * width + j] = 1.5 * ((float)tmpMax / (float)tmp-(float)1/3);
+				if(pixel_x[i * width + j]<th){
+					pixel_x[i * width + j]=0;
 				}
 				convRes.clear();
 			}
@@ -99,8 +86,8 @@ public class TemplateMatching {
 			pixels[i] = phaseIn[i];
 
 		}
-
-		imgOut.setPixels(pixels);
+		
+		 imgOut.setPixels(pixels);
 
 	}
 

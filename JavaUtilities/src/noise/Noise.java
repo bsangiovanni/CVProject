@@ -27,7 +27,7 @@ public class Noise {
 	
 	public void addSaltPepper(PGM imgIn, PGM imgOut){
 		
-		double th1 = 0.90;
+		double th1 = 0.98;
 		double th2 = 0.05;
 		int k = 5;
 		
