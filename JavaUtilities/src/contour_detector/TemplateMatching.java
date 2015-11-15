@@ -24,6 +24,12 @@ public class TemplateMatching {
 	
 	private int[][] ones = { { 1, 1, 1 }, { 1, 1, 1 }, { 1, 1, 1 } };	//usefull to calculate the sum of every 3x3 pixel
 	
+	
+	private int width;
+	private int height;
+	private int dim;
+	private int n = 3;
+	
 
 	/**
 	 * Method to make a Template Filter, in particular "3 over 9" filter
@@ -34,21 +40,25 @@ public class TemplateMatching {
 		
 		//3over9 masks: note that the ones turn clockwise around the central point 
 
-		int[][] points = new int[3][3];
+		
 
-		int width = imgIn.getWidth();
-		int height = imgIn.getHeight();
+		this.width = imgIn.getWidth();
+		this.height = imgIn.getHeight();
+		this.dim = width * height;
+		
+		
+		int[][] points = new int[n][n];
 		int[] pixels = imgIn.getPixels();
 
-		int dim = width * height;
+		
 		double[] pixel_x = new double[dim];
 
-		for (int i = (3 - 1) / 2; i < height - (3 - 1) / 2; i++) {
-			for (int j = (3 - 1) / 2; j < width - (3 - 1) / 2; j++) {
-				for (int l = 0; l < 3; l++) {
-					for (int m = 0; m < 3; m++) {
-						points[l][m] = pixels[(i + (l - (3 - 1) / 2)) * width
-								+ (j + (m - (3 - 1) / 2))];
+		for (int i = (n - 1) / 2; i < height - (n - 1) / 2; i++) {
+			for (int j = (n - 1) / 2; j < width - (n - 1) / 2; j++) {
+				for (int l = 0; l < n; l++) {
+					for (int m = 0; m < n; m++) {
+						points[l][m] = pixels[(i + (l - (n - 1) / 2)) * width
+								+ (j + (m - (n - 1) / 2))];
 
 					}
 				}
@@ -60,8 +70,10 @@ public class TemplateMatching {
 				convRes.add(utility.convolution(mask6, points));
 				convRes.add(utility.convolution(mask7, points));
 				convRes.add(utility.convolution(mask8, points));
+				
 				int tmp = utility.convolution(ones, points);
 				int tmpMax = Collections.max(convRes); //Max value of all convolutions 
+				
 				double tau = 0.88; //arbitrary value
 				double th= (1-tau)/(2*tau+1); //threshold
 				pixel_x[i * width + j] = 1.5 * ((float)tmpMax / (float)tmp-(float)1/3); //Formula to normalize pixel and to exclude monochromatic area
@@ -73,12 +85,22 @@ public class TemplateMatching {
 		}
 		
 		//Tanto bel codice duplicato... Normalizza la fase usando i float...
-		int[] phaseIn = new int[imgOut.getHeight() * imgOut.getWidth()];
-		double[] copy = Arrays.copyOf(pixel_x,
-				imgOut.getHeight() * imgOut.getWidth());
+
+
+			pixels= phaseNormalizer(pixel_x);
+
+		
+		 imgOut.setPixels(pixels);
+
+	}
+
+
+	private int[] phaseNormalizer(double[] pixel_x) {
+		int[] phaseIn = new int[dim];
+		double[] copy = Arrays.copyOf(pixel_x, dim);
 		Arrays.sort(copy);
 		float min = (float) copy[0];
-		float max = (float) copy[imgOut.getHeight() * imgOut.getWidth() - 1];
+		float max = (float) copy[dim - 1];
 		for (int i = 0; i < pixel_x.length; i++) {
 			if (pixel_x[i] < min) {
 				pixel_x[i] = 0;
@@ -92,15 +114,7 @@ public class TemplateMatching {
 			}
 			
 		}
-
-		for (int i = 0; i < dim; i++) {
-
-			pixels[i] = phaseIn[i];
-
-		}
-		
-		 imgOut.setPixels(pixels);
-
+		return phaseIn;
 	}
 
 }
