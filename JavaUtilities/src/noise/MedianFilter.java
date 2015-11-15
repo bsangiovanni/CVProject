@@ -36,18 +36,20 @@ public class MedianFilter {
 
 					}
 				}
-
+				
 				Collections.sort(list);
 				int sum = 0;
 				for (int k = 1; k < list.size() - 1; k++) {
 					sum = sum + list.get(k);
 
 				}
-				pixel_x[i * width + j] = (float) sum / list.size();
+				pixel_x[i * width + j] = (float) sum / list.size();	//Find out the median value, excluding the extremes
 				list.clear();
 			}
 
 		}
+		
+		//Stessa storia stesso posto stesso bar
 		int[] phaseIn = new int[imgOut.getHeight() * imgOut.getWidth()];
 		double[] copy = Arrays.copyOf(pixel_x,
 				imgOut.getHeight() * imgOut.getWidth());

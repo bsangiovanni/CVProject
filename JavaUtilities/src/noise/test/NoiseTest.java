@@ -4,6 +4,7 @@ import java_utilities.pgmutilities.PGM;
 import java_utilities.pgmutilities.PgmUtilities;
 import noise.AverageFilter;
 import noise.MedianFilter;
+import noise.NagaoFilter;
 import noise.Noise;
 
 public class NoiseTest {
@@ -13,34 +14,38 @@ public class NoiseTest {
 		
 PgmUtilities pgmu = new PgmUtilities();
 		
-		PGM pgm = pgmu.readPGM("images/estate.pgm");
+		PGM pgm = pgmu.readPGM("images/Pavia1.pgm");
 		PGM imgOut = pgmu.copyPGM(pgm);
-		Noise uniformNoise = new Noise();
+		Noise noise = new Noise();
 		AverageFilter aFilter= new AverageFilter();
 		MedianFilter mFilter = new MedianFilter();
+		NagaoFilter nFilter = new NagaoFilter();
 		
 		// SALT AND PEPPER
 		
-//		uniformNoise.addSaltPepper(pgm, imgOut);
-//		pgmu.writePGM(imgOut, "EstateSP.pgm");
+//		noise.addSaltPepper(pgm, imgOut);
+//		pgmu.writePGM(imgOut, "filtered/Pavia1/Pavia1SP.pgm");
 //		
 //		aFilter.makeAverageFilter(imgOut, imgOut, 3);
 //		aFilter.makeAverageFilter(imgOut, imgOut, 3);
 //		mFilter.makeMedianFilter(imgOut, imgOut, 3);
 //		mFilter.makeMedianFilter(imgOut, imgOut, 3);
-//		pgmu.writePGM(imgOut, "EstateSPMF.pgm");
+//		nFilter.makeNagaoFilter(imgOut, imgOut);
+//		pgmu.writePGM(imgOut, "filtered/Pavia1/Pavia1SPNF.pgm");
 		
 
 		// UNIFORM NOISE
 		
-		uniformNoise.addUniformNoise(pgm, imgOut);
-		pgmu.writePGM(imgOut, "EstateUN.pgm");
+		noise.addUniformNoise(pgm, imgOut);
+		pgmu.writePGM(imgOut, "filtered/Pavia1/Pavia1UN.pgm");
+//		
+//		aFilter.makeAverageFilter(imgOut, imgOut, 3);
+//		aFilter.makeAverageFilter(imgOut, imgOut, 3);
+//		mFilter.makeMedianFilter(imgOut, imgOut, 3);
+//		mFilter.makeMedianFilter(imgOut, imgOut, 3);
+		nFilter.makeNagaoFilter(imgOut, imgOut);
+		pgmu.writePGM(imgOut, "filtered/Pavia1/Pavia1UNNF.pgm");
 		
-		aFilter.makeAverageFilter(imgOut, imgOut, 9);
-		aFilter.makeAverageFilter(imgOut, imgOut, 9);
-//		mFilter.makeMedianFilter(imgOut, imgOut, 5);
-//		mFilter.makeMedianFilter(imgOut, imgOut, 5);
-		pgmu.writePGM(imgOut, "EstateUNAF.pgm");
 		
 		
 	}

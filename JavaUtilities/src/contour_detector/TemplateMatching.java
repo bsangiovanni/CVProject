@@ -12,7 +12,14 @@ public class TemplateMatching {
 	private PgmUtilities utility = new PgmUtilities();
 	private ArrayList<Integer> convRes = new ArrayList<Integer>();
 
+	/**
+	 * Method to make a Template Filter, in particular "3 over 9" filter
+	 * @param imgIn
+	 * @param imgOut
+	 */
 	public void makeFilter(PGM imgIn, PGM imgOut) {
+		
+		//3over9 masks: note that the ones turn clockwise around the central point 
 
 		int[][] mask1 = { { 1, 1, 1 }, { 0, 0, 0 }, { 0, 0, 0 } };
 		int[][] mask2 = { { 0, 1, 1 }, { 0, 0, 1 }, { 0, 0, 0 } };
@@ -22,7 +29,7 @@ public class TemplateMatching {
 		int[][] mask6 = { { 0, 0, 0 }, { 1, 0, 0 }, { 1, 1, 0 } };
 		int[][] mask7 = { { 1, 0, 0 }, { 1, 0, 0 }, { 1, 0, 0 } };
 		int[][] mask8 = { { 1, 1, 0 }, { 1, 0, 0 }, { 0, 0, 0 } };
-		int[][] ones = { { 1, 1, 1 }, { 1, 1, 1 }, { 1, 1, 1 } };
+		int[][] ones = { { 1, 1, 1 }, { 1, 1, 1 }, { 1, 1, 1 } };	//usefull to calculate the sum of every 3x3 pixel
 
 		int[][] points = new int[3][3];
 
@@ -51,16 +58,18 @@ public class TemplateMatching {
 				convRes.add(utility.convolution(mask7, points));
 				convRes.add(utility.convolution(mask8, points));
 				int tmp = utility.convolution(ones, points);
-				int tmpMax = Collections.max(convRes);
-				double tau = 0.88;
-				double th= (1-tau)/(2*tau+1);
-				pixel_x[i * width + j] = 1.5 * ((float)tmpMax / (float)tmp-(float)1/3);
+				int tmpMax = Collections.max(convRes); //Max value of all convolutions 
+				double tau = 0.88; //arbitrary value
+				double th= (1-tau)/(2*tau+1); //threshold
+				pixel_x[i * width + j] = 1.5 * ((float)tmpMax / (float)tmp-(float)1/3); //Formula to normalize pixel and to exclude monochromatic area
 				if(pixel_x[i * width + j]<th){
-					pixel_x[i * width + j]=0;
+					pixel_x[i * width + j]=0;	
 				}
 				convRes.clear();
 			}
 		}
+		
+		//Tanto bel codice duplicato... Normalizza la fase usando i float...
 		int[] phaseIn = new int[imgOut.getHeight() * imgOut.getWidth()];
 		double[] copy = Arrays.copyOf(pixel_x,
 				imgOut.getHeight() * imgOut.getWidth());

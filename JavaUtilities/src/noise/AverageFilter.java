@@ -36,11 +36,12 @@ public class AverageFilter {
 
 					}
 				}
-				int tmp = utility.convolution(ones, points);
-				pixel_x[i * width + j] = (float)tmp/(n*n);
+				int tmp = utility.convolution(ones, points);		//makes the sum of every nxn area around each pixel
+				pixel_x[i * width + j] = (float)tmp/(n*n);			//Average value to apply at the central pixel
 
 			}
 		}
+		//MARTINELLI PERDONACI
 		int[] phaseIn = new int[imgOut.getHeight() * imgOut.getWidth()];
 		double[] copy = Arrays.copyOf(pixel_x,
 				imgOut.getHeight() * imgOut.getWidth());

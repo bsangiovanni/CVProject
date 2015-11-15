@@ -59,14 +59,14 @@ public class Sobel {
 		float temp_p;
 
 		for (int i = 0; i < dim; i++) {
-			temp_m = (int) Math.sqrt((pixel_x[i] * pixel_x[i])
+			temp_m = (int) Math.sqrt((pixel_x[i] * pixel_x[i])		//Sobel Module
 					+ (pixel_y[i] * pixel_y[i]));
 
 			/*
 			 * Remember that atan2 returns a value between -pi and pi -> useful
 			 * for the normalization
 			 */
-			temp_p = (float) Math.atan2((float) pixel_y[i], (float) pixel_x[i]);
+			temp_p = (float) Math.atan2((float) pixel_y[i], (float) pixel_x[i]);		//Sobel phase
 			
 			pixels[i] = temp_m;
 			imgOutModule.setPixels(pixels);

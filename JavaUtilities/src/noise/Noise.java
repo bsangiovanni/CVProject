@@ -9,8 +9,12 @@ public class Noise {
 	
 	private PgmUtilities pgmu = new PgmUtilities();
 	
+	/**
+	 * Add a Uniform noise to a specify image. Change K to modify the intensity of the disturbance
+	 */
+	
 	public void addUniformNoise(PGM imgIn, PGM imgOut){
-		int k=50;
+		int k=30;
 		int[] pixels = imgIn.getPixels();
 		for (int i = 0; i < pixels.length; i++) {
 			
@@ -24,6 +28,11 @@ public class Noise {
 		
 	}
 	
+	/**
+	 * Add a Salt and Pepper noise to a specify image. Change th1, th2 and k to modify the percentage of black and white, and their intensity.
+	 * @param imgIn
+	 * @param imgOut
+	 */
 	
 	public void addSaltPepper(PGM imgIn, PGM imgOut){
 		
