@@ -19,9 +19,9 @@ public class GaussianTest {
 
 		gauss.applyFilter(imgOut, imgOut);
 //		pgmu.normalizeModule(imgOut.getPixels(), imgOut);
-		gauss.threshold(imgOut);
+//		gauss.threshold(imgOut);
 		
-		pgmu.writePGM(imgOut, "EstateGauss3.pgm");
+		pgmu.writePGM(imgOut, "EstateGauss4.pgm");
 
 	}
 

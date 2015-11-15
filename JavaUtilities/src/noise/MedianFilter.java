@@ -7,8 +7,13 @@ import java_utilities.pgmutilities.PGM;
 
 
 public class MedianFilter {
+	
+	private int width;
+	private int height;
+	private int dim;
+	private int n=3;
 
-	public void makeMedianFilter(PGM imgIn, PGM imgOut, int n) {
+	public void makeMedianFilter(PGM imgIn, PGM imgOut) {
 
 		int[][] ones = new int[n][n];
 
@@ -18,11 +23,12 @@ public class MedianFilter {
 			}
 		}
 
-		int width = imgIn.getWidth();
-		int height = imgIn.getHeight();
+		this.width = imgIn.getWidth();
+		this.height = imgIn.getHeight();
+		this.dim = width * height;
+
 		int[] pixels = imgIn.getPixels();
 
-		int dim = width * height;
 		double[] pixel_x = new double[dim];
 
 		ArrayList<Integer> list = new ArrayList<Integer>();
@@ -49,7 +55,7 @@ public class MedianFilter {
 
 		}
 		
-		//Stessa storia stesso posto stesso bar
+
 		int[] phaseIn = new int[imgOut.getHeight() * imgOut.getWidth()];
 		double[] copy = Arrays.copyOf(pixel_x,
 				imgOut.getHeight() * imgOut.getWidth());

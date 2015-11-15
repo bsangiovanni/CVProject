@@ -3,7 +3,7 @@ package contour_detector;
 import java_utilities.pgmutilities.PGM;
 import java_utilities.pgmutilities.PgmUtilities;
 
-public class Gaussian implements ContourDetector{
+public class Gaussian implements IFilter{
 
 	private PgmUtilities utility = new PgmUtilities();
 

@@ -7,7 +7,7 @@ import java.util.Collections;
 import java_utilities.pgmutilities.PGM;
 import java_utilities.pgmutilities.PgmUtilities;
 
-public class TemplateMatching {
+public class TemplateMatching implements IFilter{
 
 	private PgmUtilities utility = new PgmUtilities();
 	private ArrayList<Integer> convRes = new ArrayList<Integer>();

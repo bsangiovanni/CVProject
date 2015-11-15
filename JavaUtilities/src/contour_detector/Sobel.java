@@ -3,7 +3,7 @@ package contour_detector;
 import java_utilities.pgmutilities.PGM;
 import java_utilities.pgmutilities.PgmUtilities;
 
-public class Sobel implements ContourDetector {
+public class Sobel implements IFilter {
 	
 	
 	private PgmUtilities utility = new PgmUtilities();
