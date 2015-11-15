@@ -3,7 +3,7 @@ package contour_detector;
 import java_utilities.pgmutilities.PGM;
 import java_utilities.pgmutilities.PgmUtilities;
 
-public class Gaussian {
+public class Gaussian implements ContourDetector{
 
 	private PgmUtilities utility = new PgmUtilities();
 
@@ -56,7 +56,7 @@ public class Gaussian {
 	 * @param imgOut
 	 */
 
-	public void makeGaussian(PGM imgIn, PGM imgOut) {
+	public void applyFilter(PGM imgIn, PGM imgOut) {
 		int width = imgIn.getWidth();
 		int height = imgIn.getHeight();
 		int[] pixels = imgIn.getPixels();

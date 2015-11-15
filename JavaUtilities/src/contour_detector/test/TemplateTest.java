@@ -16,7 +16,7 @@ public class TemplateTest {
 
 		TemplateMatching template = new TemplateMatching();
 
-		template.makeFilter(pgm, imgOut);
+		template.applyFilter(pgm, imgOut);
 
 		
 //		pgmu.normalizeModule(imgOut.getPixels(), imgOut);

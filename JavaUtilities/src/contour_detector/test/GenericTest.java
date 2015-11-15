@@ -48,7 +48,7 @@ public class GenericTest {
 		PGM imgOut = pgmu.copyPGM(pgm);
 		
 		TemplateMatching template = new TemplateMatching();
-		template.makeFilter(pgm, imgOut);
+		template.applyFilter(pgm, imgOut);
 		pgmu.writePGM(imgOut, "filtered/Pavia1/Pavia1UNNFThreeOverNine.pgm");
 		
 		//Make images with noise in "NoiseTest" and repeat them

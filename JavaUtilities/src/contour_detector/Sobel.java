@@ -3,7 +3,7 @@ package contour_detector;
 import java_utilities.pgmutilities.PGM;
 import java_utilities.pgmutilities.PgmUtilities;
 
-public class Sobel {
+public class Sobel implements ContourDetector {
 	
 	
 	private PgmUtilities utility = new PgmUtilities();
@@ -14,15 +14,25 @@ public class Sobel {
 
 	public final static int[][] SOBEL_Y = { { -1, -2, -1 }, { 0, 0, 0 },
 			{ 1, 2, 1 } };
+	
+	//dimensional utilities
+	
+	private int width;
+	private int height;
+	private int dim;
+	
+	float[] sobelPhase;
 
 
-	public void makeSobel(PGM imgIn, PGM imgOutModule, float[] phase) {
+	public void applyFilter(PGM imgIn, PGM imgOutModule) {
 
-		int width = imgIn.getWidth();
-		int height = imgIn.getHeight();
+		this.width = imgIn.getWidth();
+		this.height = imgIn.getHeight();
+		this.dim = width * height;
+		
+		
 		int[] pixels = imgIn.getPixels();
-		int dim = width * height;
-
+	
 		int[] pixel_x = new int[dim];
 		int[] pixel_y = new int[dim];
 
@@ -51,33 +61,55 @@ public class Sobel {
 			}
 
 		}
-		
-		
-		
 
-		int temp_m;
+		sobelModule(imgOutModule, pixel_x, pixel_y);
+		
+		this.sobelPhase = sobelPhase(imgOutModule, pixel_x, pixel_y);
+
+	}
+		
+	
+	public float[] sobelPhase(PGM img, int[] pixel_x, int[] pixel_y){
+		
+		float[] phase = new float[dim];
 		float temp_p;
-
-		for (int i = 0; i < dim; i++) {
-			temp_m = (int) Math.sqrt((pixel_x[i] * pixel_x[i])		//Sobel Module
-					+ (pixel_y[i] * pixel_y[i]));
-
+		
+		for (int i = 0; i < phase.length; i++) {
+			
 			/*
 			 * Remember that atan2 returns a value between -pi and pi -> useful
 			 * for the normalization
 			 */
-			temp_p = (float) Math.atan2((float) pixel_y[i], (float) pixel_x[i]);		//Sobel phase
-			
-			pixels[i] = temp_m;
-			imgOutModule.setPixels(pixels);
+			temp_p = (float) Math.atan2((float) pixel_y[i], (float) pixel_x[i]);		//Sobel phase	
 			phase[i] = temp_p;
+		}		
+		return phase;		
+	}
+	
+
+	public void sobelModule(PGM img, int[] pixel_x, int[] pixel_y) {
 			
+		int[] pixels = img.getPixels();
+		int temp_m;
+		
+		for (int i = 0; i < dim; i++) {
+			temp_m = (int) Math.sqrt((pixel_x[i] * pixel_x[i])		//Sobel Module
+					+ (pixel_y[i] * pixel_y[i]));
 
+			pixels[i] = temp_m;
+	
 		}
-
+		img.setPixels(pixels);
+		
 	}
 
+
+
+	public float[] getSobelPhase() {
+		return sobelPhase;
+	}
 	
 	
+
 
 }

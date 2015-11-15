@@ -13,21 +13,18 @@ public class SobelTest {
 		
 		PGM pgm = pgmu.readPGM("images/estate.pgm");
 		PGM imgOut = pgmu.copyPGM(pgm);
-	
-		
-		float[] phase = new float[pgm.getHeight()*pgm.getWidth()];
 
-		sobel.makeSobel(pgm, imgOut, phase);
+		sobel.applyFilter(pgm, imgOut);
 		pgmu.normalizeModule(imgOut.getPixels(), imgOut);
 
 //		pgmu.EqualizerModule(histogram, imgOut, imgOut.getPixels());
-		pgmu.writePGM(imgOut, "moduloEstate2.pgm");
+		pgmu.writePGM(imgOut, "moduloEstate3.pgm");
 		
-		pgmu.normalizePhase(phase, imgOut);
+		pgmu.normalizePhase(sobel.getSobelPhase(), imgOut);
 //
 //		int[] histogram = pgmu.histogramPGM(imgOut);
 //		pgmu.EqualizerModule(histogram, imgOut, imgOut.getPixels());
-		pgmu.writePGM(imgOut, "faseEstate2.pgm");
+		pgmu.writePGM(imgOut, "faseEstate3.pgm");
 
 //		
 //		

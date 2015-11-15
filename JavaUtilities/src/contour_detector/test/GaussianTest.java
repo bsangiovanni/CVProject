@@ -17,7 +17,7 @@ public class GaussianTest {
 		Gaussian gauss = new Gaussian();
 		
 
-		gauss.makeGaussian(imgOut, imgOut);
+		gauss.applyFilter(imgOut, imgOut);
 //		pgmu.normalizeModule(imgOut.getPixels(), imgOut);
 		gauss.threshold(imgOut);
 		
