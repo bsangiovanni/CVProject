@@ -1,5 +1,6 @@
 package ui;
 
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -7,7 +8,7 @@ import java_utilities.pgmutilities.PGM;
 import java_utilities.pgmutilities.PgmUtilities;
 
 import javax.swing.JButton;
-import javax.swing.JMenuBar;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import noise.AverageFilter;
@@ -22,40 +23,53 @@ public class MainPanel extends JPanel{
 	
 	private static final long serialVersionUID = 1L;
 	
+	private FileList list;
 	private PgmUtilities pgmu = new PgmUtilities();
 	private String filename;
+	private PGM pgm;
+	private PGM imgOut;
+	
 
 
 	public MainPanel(FileList list) {
 		super();
+		this.list=list;
+		list.clearList();
+		setLayout(new GridLayout(3, 1));
+		contourPanel();
+		noisePanel();
+		noiseFilters();
 		
 		
-
+	}
+	
+	public void contourPanel(){
+		JPanel contourPanel = new JPanel();
+		contourPanel.setLayout(new GridLayout(4,1));
+		
+		JLabel label = new JLabel(" --- Contour Detection ---");
+		contourPanel.add(label);
 		
 		JButton sobelButton = new JButton("Apply Sobel");
 		sobelButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				filename = list.getFileName();
-				PGM pgm = pgmu.readPGM(filename);
-				PGM imgOut = pgmu.copyPGM(pgm);				
+				
+				readSetPGM();			
 				Sobel sobel = new Sobel();
-
 				sobel.applyFilter(pgm, imgOut);
 				pgmu.normalizeModule(imgOut.getPixels(), imgOut);
-				
-				pgmu.writePGM(imgOut, filename.concat("_ModuloSobel.pgm"));
-				
+				String[] nameext = filename.split("\\.");
+				String name = nameext[0];
+				pgmu.writePGM(imgOut, name.concat("_ModuloSobel.pgm"));				
 				pgmu.normalizePhase(sobel.getSobelPhase(), imgOut);
-
-				pgmu.writePGM(imgOut, filename.concat("_FaseSobel.pgm"));
-				
+				pgmu.writePGM(imgOut, name.concat("_FaseSobel.pgm"));				
 				list.clearList();
 			}
 		});
 
-		add(sobelButton);
+		contourPanel.add(sobelButton);
 		
 		
 		JButton gaussButton = new JButton("Apply DoG");
@@ -63,147 +77,165 @@ public class MainPanel extends JPanel{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				filename = list.getFileName();
-				PGM pgm = pgmu.readPGM(filename);
-				PGM imgOut = pgmu.copyPGM(pgm);
-				
-				Gaussian gauss = new Gaussian();
-				
-
+				readSetPGM();				
+				Gaussian gauss = new Gaussian();			
 				gauss.applyFilter(imgOut, imgOut);
-
-				pgmu.writePGM(imgOut, filename.concat("_DoG.pgm"));
+				String[] nameext = filename.split("\\.");
+				String name = nameext[0];
+				pgmu.writePGM(imgOut, name.concat("_DoG.pgm"));
 				list.clearList();
 			}
 		});
 
-		add(gaussButton);
+		contourPanel.add(gaussButton);
 
 		JButton templateButton = new JButton("Apply 3/9");
 		templateButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				filename = list.getFileName();
-				PGM pgm = pgmu.readPGM(filename);
-				PGM imgOut = pgmu.copyPGM(pgm);
+				readSetPGM();
 
 				TemplateMatching template = new TemplateMatching();
 
 				template.applyFilter(pgm, imgOut);
-
-				pgmu.writePGM(imgOut, filename.concat("_TemplateMatching.pgm"));
+				String[] nameext = filename.split("\\.");
+				String name = nameext[0];
+				pgmu.writePGM(imgOut, name.concat("_TemplateMatching.pgm"));
 				list.clearList();
 			}
 		});
 
-		add(templateButton);
+		contourPanel.add(templateButton);
+		
+		add(contourPanel);
+	}
+	
+	public void noisePanel(){
+		JPanel noisepanel = new JPanel();
+		noisepanel.setLayout(new GridLayout(3,1));
+		JLabel label = new JLabel(" --- Noise --- ");
+		noisepanel.add(label);
 		
 		JButton uniformNoiseButton = new JButton("Apply Uniform Noise");
 		uniformNoiseButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				filename = list.getFileName();
-				PGM pgm = pgmu.readPGM(filename);
-				PGM imgOut = pgmu.copyPGM(pgm);
 				
+				readSetPGM();				
 				Noise noise = new Noise();
 				noise.addUniformNoise(pgm, imgOut);
-				pgmu.writePGM(imgOut, filename.concat("_UN.pgm"));
+				String[] nameext = filename.split("\\.");
+				String name = nameext[0];
+				pgmu.writePGM(imgOut, name.concat("_UN.pgm"));
 				list.clearList();
 
 
 			}
 		});
 
-		add(uniformNoiseButton);
+		noisepanel.add(uniformNoiseButton);
 		
 		JButton SPNoiseButton = new JButton("Apply Salt and Pepper Noise");
 		SPNoiseButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				filename = list.getFileName();
-				PGM pgm = pgmu.readPGM(filename);
-				PGM imgOut = pgmu.copyPGM(pgm);
 				
+				readSetPGM();
 				Noise noise = new Noise();
 				noise.addSaltPepper(pgm, imgOut);
-				pgmu.writePGM(imgOut, filename.concat("_SPN.pgm"));
+				String[] nameext = filename.split("\\.");
+				String name = nameext[0];
+				pgmu.writePGM(imgOut, name.concat("_SPN.pgm"));
 				list.clearList();
 
 
 			}
 		});
 
-		add(SPNoiseButton);
-
+		noisepanel.add(SPNoiseButton);
+		
+		add(noisepanel);
+	}
+	
+	public void noiseFilters(){
+		JPanel filterpanel = new JPanel();
+		filterpanel.setLayout(new GridLayout(4,1));
+		JLabel label = new JLabel(" --- Noise Filters --- ");
+		filterpanel.add(label);
+		
 		JButton afButton = new JButton("Apply Average Filter");
 		afButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				filename = list.getFileName();
-				PGM pgm = pgmu.readPGM(filename);
-				PGM imgOut = pgmu.copyPGM(pgm);
+				
+				readSetPGM();
 				AverageFilter aFilter= new AverageFilter();
 				aFilter.makeAverageFilter(imgOut, imgOut);
 				aFilter.makeAverageFilter(imgOut, imgOut);
-				pgmu.writePGM(imgOut, filename.concat("AF"));
+				String[] nameext = filename.split("\\.");
+				String name = nameext[0];
+				pgmu.writePGM(imgOut, name.concat("AF.pgm"));
 				list.clearList();
 
 
 			}
 		});
 
-		add(afButton);
+		filterpanel.add(afButton);
 		
 		JButton mfButton = new JButton("Apply Median Filter");
 		mfButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				filename = list.getFileName();
-				PGM pgm = pgmu.readPGM(filename);
-				PGM imgOut = pgmu.copyPGM(pgm);
+				
+				readSetPGM();
 				MedianFilter mFilter= new MedianFilter();
 				mFilter.makeMedianFilter(imgOut, imgOut);
 				mFilter.makeMedianFilter(imgOut, imgOut);
-				pgmu.writePGM(imgOut, filename.concat("MF"));
+				String[] nameext = filename.split("\\.");
+				String name = nameext[0];
+				pgmu.writePGM(imgOut, name.concat("MF.pgm"));
 				list.clearList();
 
 
 			}
 		});
 
-		add(mfButton);
+		filterpanel.add(mfButton);
 		
 		JButton nagaoButton = new JButton("Apply Nagao Filter");
 		nagaoButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				filename = list.getFileName();
-				PGM pgm = pgmu.readPGM(filename);
-				PGM imgOut = pgmu.copyPGM(pgm);
+				
+				readSetPGM();
 				NagaoFilter nFilter = new NagaoFilter();
 				nFilter.makeNagaoFilter(imgOut, imgOut);
-				pgmu.writePGM(imgOut, filename.concat("NF"));
+				String[] nameext = filename.split("\\.");
+				String name = nameext[0];
+				pgmu.writePGM(imgOut, name.concat("NF.pgm"));
 				list.clearList();
-
-
 			}
 		});
 
-		add(nagaoButton);
+		filterpanel.add(nagaoButton);
 		
+		add(filterpanel);
 	}
+
 	
 	
-	
-	
-	
-	
+	public void readSetPGM(){
+		this.filename=list.getFileName();
+		this.pgm = pgmu.readPGM(filename);
+		this.imgOut = pgmu.copyPGM(pgm);	
+	}
+
 
 }

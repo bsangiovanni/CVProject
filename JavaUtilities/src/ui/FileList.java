@@ -28,7 +28,7 @@ public class FileList extends Observable{
 	public void clearList(){
 		this.names.clear();
 		generateList();
-		
+		setChanged();
 		notifyObservers();
 	}
 	
@@ -38,7 +38,7 @@ public class FileList extends Observable{
 	
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
-		notifyObservers();
+
 	}
 	
 	public String getFileName() {

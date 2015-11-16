@@ -10,6 +10,10 @@ import javax.swing.JMenuItem;
 
 public class FileMenu extends JMenu implements Observer{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private FileList list;
 	
 	
