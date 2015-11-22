@@ -21,6 +21,8 @@ import contour_detector.TemplateMatching;
 
 public class MainPanel extends JPanel{
 	
+	// This class generates the user interface
+	
 	private static final long serialVersionUID = 1L;
 	
 	private FileList list;
@@ -63,8 +65,8 @@ public class MainPanel extends JPanel{
 				String[] nameext = filename.split("\\.");
 				String name = nameext[0];
 				pgmu.writePGM(imgOut, name.concat("_ModuloSobel.pgm"));				
-				pgmu.normalizePhase(sobel.getSobelPhase(), imgOut);
-				pgmu.writePGM(imgOut, name.concat("_FaseSobel.pgm"));				
+//				sobel.normalizeSobelPhase(imgOut);
+//				pgmu.writePGM(imgOut, name.concat("_FaseSobel.pgm"));				
 				list.clearList();
 			}
 		});

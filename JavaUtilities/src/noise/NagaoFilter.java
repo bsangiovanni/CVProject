@@ -1,26 +1,33 @@
 package noise;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 import java_utilities.pgmutilities.PGM;
 import java_utilities.pgmutilities.PgmUtilities;
 
 public class NagaoFilter {
+	
+	//This class implements the Nagao Filter for de-noising
 
 	private PgmUtilities utility = new PgmUtilities();
 
 	ArrayList<Float> list = new ArrayList<Float>();
 	ArrayList<int[][]> maskList = new ArrayList<int[][]>();
+	
+	
+	private int width;
+	private int height;
+	private int dim;
+	private int n=5;
 
 	public void makeNagaoFilter(PGM imgIn, PGM imgOut) {
 
-		int width = imgIn.getWidth();
-		int height = imgIn.getHeight();
+		this.width = imgIn.getWidth();
+		this.height = imgIn.getHeight();
+		this.dim = width * height;
+		
 		int[] pixels = imgIn.getPixels();
-		int n = 5;
-		int dim = width * height;
 		double[] pixel_x = new double[dim];
 
 		// First of all, initialize each sub-group
@@ -125,36 +132,11 @@ public class NagaoFilter {
 			}
 
 		}
-		
-		//-.- (in realtà è inutile la normalizzazione, ma meglio lasciarla forse)
-		int[] phaseIn = new int[imgOut.getHeight() * imgOut.getWidth()];
-		double[] copy = Arrays.copyOf(pixel_x,
-				imgOut.getHeight() * imgOut.getWidth());
-		Arrays.sort(copy);
-		float min = (float) copy[0];
-		float max = (float) copy[imgOut.getHeight() * imgOut.getWidth() - 1];
-		for (int i = 0; i < pixel_x.length; i++) {
-			if (pixel_x[i] <= min) {
-				pixel_x[i] = 0;
-			}
-			if (pixel_x[i] >= max) {
-				pixel_x[i] = 255;
-			}
-			if (pixel_x[i] > min && pixel_x[i] < max) {
-				pixel_x[i] = 255 * (pixel_x[i] - min) / (max - min);
-				phaseIn[i] = (int) pixel_x[i];
-
-			}
-
-		}
-
-		for (int i = 0; i < dim; i++) {
-
-			pixels[i] = phaseIn[i];
-
-		}
+		pixels= utility.normalizePhase(imgOut, pixel_x);
 
 		imgOut.setPixels(pixels);
 	}
+
+
 
 }

@@ -21,7 +21,7 @@ public class GaussianTest {
 //		pgmu.normalizeModule(imgOut.getPixels(), imgOut);
 //		gauss.threshold(imgOut);
 		
-		pgmu.writePGM(imgOut, "EstateGauss4.pgm");
+		pgmu.writePGM(imgOut, "estategauss2.pgm");
 
 	}
 

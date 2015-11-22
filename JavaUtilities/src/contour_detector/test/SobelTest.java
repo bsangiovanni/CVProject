@@ -20,7 +20,7 @@ public class SobelTest {
 //		pgmu.EqualizerModule(histogram, imgOut, imgOut.getPixels());
 		pgmu.writePGM(imgOut, "moduloEstate3.pgm");
 		
-		pgmu.normalizePhase(sobel.getSobelPhase(), imgOut);
+		sobel.normalizeSobelPhase(imgOut);
 //
 //		int[] histogram = pgmu.histogramPGM(imgOut);
 //		pgmu.EqualizerModule(histogram, imgOut, imgOut.getPixels());

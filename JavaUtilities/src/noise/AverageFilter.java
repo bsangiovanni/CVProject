@@ -1,11 +1,11 @@
 package noise;
 
-import java.util.Arrays;
-
 import java_utilities.pgmutilities.PGM;
 import java_utilities.pgmutilities.PgmUtilities;
 
 public class AverageFilter {
+	
+	//This class implements the Average Filter for de-noising
 
 	private PgmUtilities utility = new PgmUtilities();
 	
@@ -48,33 +48,11 @@ public class AverageFilter {
 			}
 		}
 
-		pixels = phaseNormalizer(pixel_x);
+		pixels= utility.normalizePhase(imgOut, pixel_x);
 		 imgOut.setPixels(pixels);
 	}
 
 
-	private int[] phaseNormalizer(double[] pixel_x) {
-		int[] phaseIn = new int[dim];
-		double[] copy = Arrays.copyOf(pixel_x,
-				dim);
-		Arrays.sort(copy);
-		float min = (float) copy[0];
-		float max = (float) copy[dim - 1];
-		for (int i = 0; i < pixel_x.length; i++) {
-			if (pixel_x[i] < min) {
-				pixel_x[i] = 0;
-			}
-			if (pixel_x[i] > max) {
-				pixel_x[i] = 255;
-			}
-			if (pixel_x[i] >= min && pixel_x[i] <= max) {
-				pixel_x[i] = 255 * (pixel_x[i] - min) / (max - min);
-				phaseIn[i] = (int) pixel_x[i];
 
-			}
-			
-		}
-		return phaseIn;
-	}
 
 }

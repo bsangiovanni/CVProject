@@ -7,6 +7,9 @@ import java_utilities.pgmutilities.PgmUtilities;
 
 public class Noise {
 	
+	//This class implements different kinds of noise 	
+	
+	
 	private PgmUtilities pgmu = new PgmUtilities();
 	
 	/**
@@ -30,15 +33,13 @@ public class Noise {
 	
 	/**
 	 * Add a Salt and Pepper noise to a specify image. Change th1, th2 and k to modify the percentage of black and white, and their intensity.
-	 * @param imgIn
-	 * @param imgOut
 	 */
 	
 	public void addSaltPepper(PGM imgIn, PGM imgOut){
 		
 		double th1 = 0.98;
 		double th2 = 0.05;
-		int k = 5;
+		int k = 1;
 		
 		int[] pixels = imgIn.getPixels();
 		for (int i = 0; i < pixels.length; i++) {

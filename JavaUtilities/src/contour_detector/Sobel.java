@@ -1,10 +1,13 @@
 package contour_detector;
 
+import java.util.Arrays;
+
 import java_utilities.pgmutilities.PGM;
 import java_utilities.pgmutilities.PgmUtilities;
 
 public class Sobel implements IFilter {
 	
+	//This class implements the Sobel operator for contours detection
 	
 	private PgmUtilities utility = new PgmUtilities();
 
@@ -102,14 +105,36 @@ public class Sobel implements IFilter {
 		img.setPixels(pixels);
 		
 	}
+	
+	//This method generate the phase of Sobel 
+	
+	public PGM normalizeSobelPhase(PGM imgOut) {
+		int[] phaseIn = new int[imgOut.getHeight() * imgOut.getWidth()];
+		float[] copy = Arrays.copyOf(sobelPhase, imgOut.getHeight()*imgOut.getWidth());
+		Arrays.sort(copy);
+		float min=copy[0];
+		float max=copy[imgOut.getHeight()*imgOut.getWidth()-1];
+		for (int i = 0; i < sobelPhase.length; i++) {
+			sobelPhase[i] = (float) (sobelPhase[i] + Math.PI);
+//			phaseIn[i] = (int) phase[i];
 
+			if(sobelPhase[i]<min){
+				sobelPhase[i]=0;
+			}
+			if(sobelPhase[i]>max){
+				sobelPhase[i]=255;
+			}
+			if(sobelPhase[i]>=min && sobelPhase[i]<=max){
+				sobelPhase[i]=255*(sobelPhase[i]-min)/(max-min);
+				phaseIn[i]=(int)sobelPhase[i];
+			}
+			
+		}
+		imgOut.setPixels(phaseIn);
+		return imgOut;
 
-
-	public float[] getSobelPhase() {
-		return sobelPhase;
 	}
-	
-	
+
 
 
 }

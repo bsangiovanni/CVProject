@@ -12,8 +12,8 @@ public class CVProject {
 	
 	public static void main(String[] args) {
 		JFrame frame = new JFrame();
-		frame.setSize(400,400);
-		frame.setTitle("CVProject 0.1");
+		frame.setSize(500,400);
+		frame.setTitle("Image Filtering - Computer Vision Project 2015");
 		
 		FileList list = new FileList();
 	    FileMenu menu = new FileMenu(list);

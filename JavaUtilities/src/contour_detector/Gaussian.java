@@ -4,26 +4,22 @@ import java_utilities.pgmutilities.PGM;
 import java_utilities.pgmutilities.PgmUtilities;
 
 public class Gaussian implements IFilter{
+	
+	//This class implements the DoG operator for contours detection
 
 	private PgmUtilities utility = new PgmUtilities();
 
 	private int n = 11; //mask size
 	private float varianceA = 1.25f; //must be 1.6 less than 2^ variance
 	private float varianceB = 2f;
-
 	
-	public void setN(int n) {
-		this.n = n;
-	}
-
-	public void setVarianceA(float varianceA) {
-		this.varianceA = varianceA;
-	}
-
-	public void setVarianceB(float varianceB) {
-		this.varianceB = varianceB;
-	}
 	
+	//dimensional utilities
+	
+	private int width;
+	private int height;
+	private int dim;
+
 	
 	/**
 	 * Make the Gaussian Mask using the n value and variances and create the DoG mask with them 
@@ -57,11 +53,11 @@ public class Gaussian implements IFilter{
 	 */
 
 	public void applyFilter(PGM imgIn, PGM imgOut) {
-		int width = imgIn.getWidth();
-		int height = imgIn.getHeight();
+		this.width = imgIn.getWidth();
+		this.height = imgIn.getHeight();
+		this.dim = width * height;
+		
 		int[] pixels = imgIn.getPixels();
-
-		int dim = width * height;
 		int[] pixel_x = new int[dim];
 
 		int[][] points = new int[n][n];
@@ -108,9 +104,7 @@ public class Gaussian implements IFilter{
 	 * @return
 	 */
 
-	private int[] contourDetection(PGM img, int n) {
-		int width = img.getWidth();
-		int height = img.getHeight();
+	public int[] contourDetection(PGM img, int n) {
 		int[] pixels = img.getPixels();
 		int[][] points = new int[n][n];
 		

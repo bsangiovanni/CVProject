@@ -11,18 +11,17 @@ public class TemplateTest {
 		
 		PgmUtilities pgmu = new PgmUtilities();
 
-		PGM pgm = pgmu.readPGM("images/estate.pgm");
+		PGM pgm = pgmu.readPGM("images/piante.pgm");
 		PGM imgOut = pgmu.copyPGM(pgm);
 
 		TemplateMatching template = new TemplateMatching();
 
 		template.applyFilter(pgm, imgOut);
 
-		
 //		pgmu.normalizeModule(imgOut.getPixels(), imgOut);
 //		int[] histogram = pgmu.histogramPGM(imgOut);
 //		pgmu.EqualizerModule(histogram, imgOut, imgOut.getPixels());
-		pgmu.writePGM(imgOut, "EstateT.pgm");
+		pgmu.writePGM(imgOut, "pianteT.pgm");
 	}
 
 }

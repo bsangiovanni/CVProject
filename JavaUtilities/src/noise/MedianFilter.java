@@ -1,13 +1,17 @@
 package noise;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+
 import java_utilities.pgmutilities.PGM;
+import java_utilities.pgmutilities.PgmUtilities;
 
 
 public class MedianFilter {
 	
+	//This class implements the Median Filter for de-noising
+	
+	private PgmUtilities utility = new PgmUtilities();
 	private int width;
 	private int height;
 	private int dim;
@@ -56,32 +60,7 @@ public class MedianFilter {
 		}
 		
 
-		int[] phaseIn = new int[imgOut.getHeight() * imgOut.getWidth()];
-		double[] copy = Arrays.copyOf(pixel_x,
-				imgOut.getHeight() * imgOut.getWidth());
-		Arrays.sort(copy);
-		float min = (float) copy[0];
-		float max = (float) copy[imgOut.getHeight() * imgOut.getWidth() - 1];
-		for (int i = 0; i < pixel_x.length; i++) {
-			if (pixel_x[i] < min) {
-				pixel_x[i] = 0;
-			}
-			if (pixel_x[i] > max) {
-				pixel_x[i] = 255;
-			}
-			if (pixel_x[i] >= min && pixel_x[i] <= max) {
-				pixel_x[i] = 255 * (pixel_x[i] - min) / (max - min);
-				phaseIn[i] = (int) pixel_x[i];
-
-			}
-
-		}
-
-		for (int i = 0; i < dim; i++) {
-
-			pixels[i] = phaseIn[i];
-
-		}
+		pixels= utility.normalizePhase(imgOut, pixel_x);
 
 		imgOut.setPixels(pixels);
 	}

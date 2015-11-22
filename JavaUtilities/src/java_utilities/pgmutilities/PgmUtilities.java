@@ -360,36 +360,7 @@ public class PgmUtilities {
 		return imgOut;
 	}
 
-	// --------------------------------------------------------//
-	// ------------------ Normalize Phase----------------------//
-	// --------------------------------------------------------//
 
-	public PGM normalizePhase(float[] phase, PGM imgOut) {
-		int[] phaseIn = new int[imgOut.getHeight() * imgOut.getWidth()];
-		float[] copy = Arrays.copyOf(phase, imgOut.getHeight()*imgOut.getWidth());
-		Arrays.sort(copy);
-		float min=copy[0];
-		float max=copy[imgOut.getHeight()*imgOut.getWidth()-1];
-		for (int i = 0; i < phase.length; i++) {
-			phase[i] = (float) (phase[i] + Math.PI);
-//			phaseIn[i] = (int) phase[i];
-
-			if(phase[i]<min){
-				phase[i]=0;
-			}
-			if(phase[i]>max){
-				phase[i]=255;
-			}
-			if(phase[i]>=min && phase[i]<=max){
-				phase[i]=255*(phase[i]-min)/(max-min);
-				phaseIn[i]=(int)phase[i];
-			}
-			
-		}
-		imgOut.setPixels(phaseIn);
-		return imgOut;
-
-	}
 
 	// --------------------------------------------------------//
 	// ------------------ Calculate Histogram -----------------//
@@ -460,6 +431,31 @@ public class PgmUtilities {
 
 			
 		}
+	
+	
+	public int[] normalizePhase(PGM imgOut, double[] pixel_x) {
+		int[] phaseIn = new int[imgOut.getHeight() * imgOut.getWidth()];
+		double[] copy = Arrays.copyOf(pixel_x,
+				imgOut.getHeight() * imgOut.getWidth());
+		Arrays.sort(copy);
+		float min = (float) copy[0];
+		float max = (float) copy[imgOut.getHeight() * imgOut.getWidth() - 1];
+		for (int i = 0; i < pixel_x.length; i++) {
+			if (pixel_x[i] <= min) {
+				pixel_x[i] = 0;
+			}
+			if (pixel_x[i] >= max) {
+				pixel_x[i] = 255;
+			}
+			if (pixel_x[i] > min && pixel_x[i] < max) {
+				pixel_x[i] = 255 * (pixel_x[i] - min) / (max - min);
+				phaseIn[i] = (int) pixel_x[i];
+
+			}
+
+		}
+		return phaseIn;
+	}
 
 }
 
